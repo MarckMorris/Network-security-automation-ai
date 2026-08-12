@@ -1,4 +1,4 @@
-﻿"""
+"""
 Main Application Entry Point
 Orchestrates all system components
 """
@@ -15,12 +15,17 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.api.app import app
 from src.config import Config
 
-# Configure logging
+# Configure logging. The log directory is created here rather than assumed to
+# exist, so importing this module never fails on a fresh clone or in a container
+# whose volume has not been mounted yet.
+LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("logs/application.log"),
+        logging.FileHandler(LOG_DIR / "application.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )
