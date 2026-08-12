@@ -35,6 +35,10 @@ class NetworkAnomalyDetector:
             contamination: Expected proportion of outliers (0.01-0.5)
             random_state: Random seed for reproducibility
         """
+        # Keep the hyperparameters as attributes: save_model/load_model need to
+        # round-trip them, and callers inspect them to report how a model was fitted.
+        self.contamination = contamination
+        self.random_state = random_state
         self.model = IsolationForest(
             contamination=contamination,
             random_state=random_state,
